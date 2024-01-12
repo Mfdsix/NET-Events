@@ -20,14 +20,20 @@ namespace frontend.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IResult> Get()
+        public async Task<IResult> Get([FromQuery(Name = "is_owner")] int IsOwner)
         {
-            return Results.Ok(await context.Events.ToListAsync());
+            var ctx = context.Events;
+
+            if (IsOwner == 1)
+            {
+                ctx.Where(data => data.CreatedBy == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            }
+            return Results.Ok(await ctx.ToListAsync());
         }
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IResult> Get(int id)
+        public async Task<IResult> GetDetail(int id)
         {
             var find = await context.Events.FindAsync(id);
             if (find == null)

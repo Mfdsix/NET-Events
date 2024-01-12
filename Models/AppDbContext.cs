@@ -10,5 +10,6 @@ namespace frontend.Models
     }
 
     public DbSet<Event> Events { get; set; }
+    public DbSet<Registration> Registrations { get; set; }
   }
 }

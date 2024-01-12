@@ -25,7 +25,7 @@ export class Event extends Component {
 
         try {
             const token = await authService.getAccessToken();
-            const response = await fetch('event', {
+            const response = await fetch('event?is_owner=1', {
                 headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -61,6 +61,7 @@ export class Event extends Component {
                 const data = await response.json();
                 e.target.reset();
 
+                window.alert("updated");
                 this.populateEvents();
             } catch (err) {
                 window.alert(err.message)
@@ -76,6 +77,7 @@ export class Event extends Component {
                 });
                 const data = await response.json();
 
+                window.alert("added");
                 this.populateEvents();
             } catch (err) {
                 window.alert(err.message)
@@ -108,6 +110,7 @@ export class Event extends Component {
                     headers,
                 });
 
+                window.alert("deleted");
                 this.populateEvents();
             } catch (err) {
                 window.alert(err.message)
@@ -157,7 +160,12 @@ export class Event extends Component {
                                         <p>{event.description}</p>
                                     </div>
                                     <div className="card-footer text-end">
-                                        <a className="text-warning" href="javascript:void(0)" onClick={(e) => this.toggleEdit(event)}>Edit</a> | <a className="text-danger" href="javascript:void(0)" onClick={ (e) => this.toggleDelete(event.id)}>Delete</a>
+                                        {this.state.loading && <span>loading...</span>}
+                                        {!this.state.loading &&
+                                            <>
+                                                <a className="text-warning" href="javascript:void(0)" onClick={(e) => this.toggleEdit(event)}>Edit</a> | <a className="text-danger" href="javascript:void(0)" onClick={(e) => this.toggleDelete(event.id)}>Delete</a>
+                                            </>
+                                        }
                                     </div>
                                 </div>
                             </div>
